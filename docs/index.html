@@ -74,7 +74,7 @@ La presentacion puede ser descargada del siguiente <a href="#">enlace</a>
 
 	Con esto se puede observar que una funcion de probabilidad basada en las configuraciones geometricas de las partes de los shapes puede exhibir multiples regiones donde la probabilidad es mayor , lo que significa que varios shapes poseen similares relaciones.
 
-	En este caso la implementacion muestra un conjunto de shapes junto con su meta-representación. El usuario puede selecionar una o dos partes del shape que desee explorar. Dando click en cualquier punto de la meta-representacion causa que los shapes sean cargados y ordenados deacuerdo a la distancia del punto seleccionado. Luego con la ayuda de los botones de navegacion el usuario puede desplazarse a traves de los shapes cercanos al punto seleccionado.Esto permite al usuario explorar los shapes con similares caracteristicas.
+	En este caso la implementacion muestra un conjunto de shapes junto con su meta-representación. El usuario puede selecionar una o dos partes del shape que desee explorar. Dando click en cualquier punto de la meta-representacion causa que los shapes sean cargados y ordenados deacuerdo a la distancia del punto seleccionado. Luego con la ayuda de los botones de navegacion el usuario puede desplazarse a traves de los shapes cercanos al punto seleccionado. Esto permite al usuario explorar los shapes con similares caracteristicas.
 </p>
 
 <p>
@@ -94,15 +94,39 @@ La presentacion puede ser descargada del siguiente <a href="#">enlace</a>
 </p>
 
 <p>
-	Basado en la formulación matemática y solucion progresiva de la edición guiada señalada por el autor se desarrollo una herramienta interactiva donde el usuario puede escalar una parte del shape , creando así una variación de dicho shape. Primero una vez que la accion es registrada en la interfaz , se consulta la meta-repŕesentación para restaurar la validación del shape deformado.
+	Basado en la formulación matemática y solucion progresiva de la edición guiada señalada por el autor se desarrollo una herramienta interactiva donde el usuario puede escalar una parte del shape , creando así una variación de dicho shape. Primero una vez que la accion es registrada en la interfaz , se consulta la meta-representación para restaurar la validación del shape deformado.Para mas detalle ver el video de la demotración.
 </p>
 
 <p>
 	<img src="editing.png">
 </p>
 
+<h1>Discusiones y Resultados</h1>
+	
+<p>
+	En el video de demostración podemos apreciar varios ejemplos de exploracion de shapes , muy similares al de los autores , en la figura 1 podemos apreciar por ejemplo la relacion EXTENT de la familia de sillas , la cual podemos ver solo un pico en la distribucion indicando que las patas de las sillas mantienen una relacion de entre 0 y 0.2 en relacion al tamaño completo del shape. En la figura 2 podemos apreciar que la distribucion para el angulo formado entre el respaldar de la silla y el asiento tiene dos picos bien definidos. Con esto el usuario puede ver las agrupaciones de los shapes por simple inspeccion.
+</p>
+
+<p>
+	<img src="angle_relation.png">
+</p>
+
+<p>
+	En varios de los casos , pese a que los autores han indicado la ubicacion de su repositorio de sus datos , no se han encontrado varios de los shapes que se aprecian en el articulo. Ocasionando esto una diferencia en las medidas de las relaciones geometricas , lo que a su ves hace variar la distribucion. Otro factor es la seleccion del bandwidth para la distribucion gaussiana que realizan los autores , ya que indican un valor experiemtal sigma de 0.05 pero no indican un procedimiento de su obtención , y al haber cambiado las mediciones de las relaciones geometricas se obtienen distribuciones similares mas no identicas. Un ejemplo de esto se puede apreciar en la figura 3 y 4.
+</p>
+
+<p>
+	<img src="angle_comparation">
+	<img src="extents_comparations">
+</p>
+
+<p>
+
+</p>
 
 
-
-
+The user
+can form an understanding of the groups by inspecting a few shapes
+for each mode. Additional examples of exploration are shown in the
+supplementary video.
 
