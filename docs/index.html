@@ -4,8 +4,11 @@ layout : default
 
 <h1>Resumen</h1>
 
-El objetivo principal de este trabajo es replicar los resultados del paper <b>"Meta-representation of Shape Families"</b> realizado por Noa Fish Melinos Averkiou Oliver van Kaick1 Olga Sorkine-Hornung Daniel Cohen-Or y Niloy J. Mitra.
-En este trabajo los autores introducen una meta-representacion que represente la esencia de una familia de shapes o formas especificas. Esta representacion es diseñada a partir de las relaciones geometricas que contienen las figuras. Esta representacion es construida a partir de shapes co-segmentados. Los autores proponen 3 usos importantes de la metarepresentacion , la exploracion , la edicion guiada y la edicion acoplada o en masa de las formas. Como proyecto final del curso de Graficos se realizo la implementación de la exploracion y edicion guiada de los shapes o formas usando la metarepresentacion descrita por los autores del artículo.
+<p>	
+	El objetivo principal de este trabajo es replicar los resultados del paper <b>"Meta-representation of Shape Families"</b> realizado por Noa Fish Melinos Averkiou Oliver van Kaick1 Olga Sorkine-Hornung Daniel Cohen-Or y Niloy J. Mitra.
+	
+	En este trabajo los autores introducen una meta-representacion que represente la esencia de una familia de shapes o formas especificas. Esta representacion es diseñada a partir de las relaciones geometricas que contienen las figuras. Esta representacion es construida a partir de shapes co-segmentados. Los autores proponen 3 usos importantes de la metarepresentacion , la exploracion , la edicion guiada y la edicion acoplada o en masa de los shapes. Como proyecto final del curso de Graficos se realizo la implementación de la exploracion y edicion guiada de los shapes o formas usando la metarepresentacion descrita por los autores del artículo.
+</p>
 
 <h1>Video</h1>
 
@@ -13,46 +16,69 @@ En este trabajo los autores introducen una meta-representacion que represente la
 
 <h2>Meta-representación</h2>
 
-El objetivo de la meta-representacion es capturar la esencia de un especifica familia de formas en terminos de las relaciones geometricas entre sus partes. Por esto como mencionan los autores es natural representar la metarepresentacion como un modelo probabilistico de las relaciones. Estas relaciones geometricas son clasificadas por los autores como unitarias (EXTENTS) y binarias (SCALES , ANGLES , CONTACTS) , definidas por los autores en las ecuaciones 3 y 4 del artículo. 
+<p>
+	El objetivo de la meta-representacion es capturar la esencia de un especifica familia de shapes en terminos de las relaciones geometricas entre sus partes. Por esto como mencionan los autores es natural representar la metarepresentacion como un modelo probabilistico de las relaciones. Estas relaciones geometricas son clasificadas por los autores como unitarias (EXTENTS) y binarias (SCALES , ANGLES , CONTACTS) , definidas por los autores en las ecuaciones 3 y 4 del artículo. 
+</p>
+
+<p>
+	Una vez obtenido el conjunto de relaciones entre las partes de cada shape de su familia , se procede a construir el modelo probabilistico representado por un Kernel Density Estimator (KDE) como los autores lo mencionan en la ecuacion (5) del articulo.
+</p>
+
+<p>
+	<img src="kde.png">
+</p>
 
 
-Una vez obtenido el conjunto de relaciones entre las partes de cada forma de la familia de shapes , se procede a construir el modelo probabilistico representado por un Kernel Density Estimator (KDE) como los autores lo mencionan en la ecuacion (5) del articulo.
-
-<img src="kde.png">
-
-
-Mas detalles de las ecuaciones pueden ser revisadas en el artículo.
-
+<p>
+	Mas detalles de las ecuaciones pueden ser revisadas en el artículo.
+</p>
 
 
 
 <h3>Data</h3>
 
-Los shapes usados para este trabajo fueron obtenidos del  <a href="http://www.yunhaiwang.org/public_html/ssl/ssd.htm">repositorio</a>  indicado por los autores en el articulo donde la mayoria de shapes ya se encuentran segmentados.
+<p>
+	Los shapes usados para este trabajo fueron obtenidos del  <a href="http://www.yunhaiwang.org/public_html/ssl/ssd.htm">repositorio</a>  indicado por los autores en el articulo donde la mayoria de shapes ya se encuentran segmentados.
+</p>
 
 <h1>Implementación</h1>
 
-En este trabajo se desarrolló la implementación de la exploración y edición guiada de shapes mediante el uso de la meterepresentacion , como lo muestra la demo del artículo en su página.
+<p>	
+	En este trabajo se desarrolló la implementación de la exploración y edición guiada de shapes mediante el uso de la meterepresentacion , como lo muestra la demo del artículo en su página.
+</p>
 
-Como señalan los autores es necesario construir un conjunto de relaciones unitarias y binarias para construir la meta-representacion , para la implementacion se construyó las relaciones de EXTENTS (unitarias) , SCALES y ANGLES (Binarias) partiendo del OBB hallado de cada shape.
+<p>
+	Como señalan los autores es necesario construir un conjunto de relaciones unitarias y binarias para construir la meta-representacion , para la implementacion se construyó las relaciones de EXTENTS (unitarias) , SCALES y ANGLES (Binarias) partiendo del OBB hallado de cada shape.
+</p>
 
-Posteriormente se realizo la construccion de la funcion PDF basado en el conjunto de relaciones, usando un modelo gaussiano.
 
-Para los efectos graficos de la implementacion se uso THREE JS y para el desarrollo de la web se utilizó el framework DJANGO.
+<p>
+	Posteriormente se realizo la construccion de la funcion PDF basado en el conjunto de relaciones, usando un modelo gaussiano.	
+</p>
+
+<p>
+	Para los efectos graficos de la implementacion se uso THREE JS y para el desarrollo de la web se utilizó el framework DJANGO.
+</p>
 
 <h3>Exploración de Shapes</h3>
 
-Una vez calculada la funcion PDF del conjunto de relaciones , se ha desarrollado una herramienta igual a la demo mostrada en la pagina del articulo , que permite la exploracion de un conjunto de shapes , en la cual se pueden explorar diferentes configuraciones de ciertas partes.
+<p>
+	Una vez calculada la funcion PDF del conjunto de relaciones , se ha desarrollado una herramienta igual a la demo mostrada en la pagina del articulo , que permite la exploracion de un conjunto de shapes , en la cual se pueden explorar diferentes configuraciones de ciertas partes.
 
-Con esto se puede observar que una funcion de probabilidad basada en las configuraciones geometricas de las partes de los shapes puede exhibir multiples regiones donde la probabilidad es mayor , lo que significa que varios shapes poseen similares relaciones.
+	Con esto se puede observar que una funcion de probabilidad basada en las configuraciones geometricas de las partes de los shapes puede exhibir multiples regiones donde la probabilidad es mayor , lo que significa que varios shapes poseen similares relaciones.
 
-En este caso la implementacion muestra un conjunto de shapes junto con su meta-representación. El usuario puede selecionar una o dos partes del shape que desee explorar. Dando click en cualquier punto de la meta-representacion causa que los shapes sean cargados y ordenados deacuerdo a la distancia del punto seleccionado. Luego con la ayuda de los botones de navegacion el usuario puede desplazarse a traves de los shapes cercanos al punto seleccionado.Esto permite al usuario explorar los shapes con similares caracteristicas.
+	En este caso la implementacion muestra un conjunto de shapes junto con su meta-representación. El usuario puede selecionar una o dos partes del shape que desee explorar. Dando click en cualquier punto de la meta-representacion causa que los shapes sean cargados y ordenados deacuerdo a la distancia del punto seleccionado. Luego con la ayuda de los botones de navegacion el usuario puede desplazarse a traves de los shapes cercanos al punto seleccionado.Esto permite al usuario explorar los shapes con similares caracteristicas.
+</p>
 
+<p>
+	<img src="exploration.png">
+</p>
 
-<img src="exploration.png">
+<p>
+	
+	Adicionalmente el usuario puede examinar la metarepresentacion de otras relaciones con ayuda de los botones ANGLES o SCALES ubicados en la parte inferior del shape. Para mas detalle ver el video de la demotración.
 
-Adicionalmente si el usuario desea examinar la metarepresentacion de otras relaciones con ayuda de los botones ANGLES o SCALES ubicados en la parte inferior del shape. Para mas detalle ver el video de la demotración.
-
+</p>
 
 <h3>Edición Guiada </h3>
 
