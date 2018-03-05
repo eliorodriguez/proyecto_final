@@ -24,22 +24,36 @@ Una vez obtenido el conjunto de relaciones entre las partes de cada forma de la 
 Mas detalles de las ecuaciones pueden ser revisadas en el artículo.
 
 
-<h1>Implementación</h1>
-
-En este trabajo se desarrolló la implementación de la exploración y edición guiada de shapes mediante el uso de la meterepresentacion , como lo muestra la demo del artículo en su página.
 
 
 <h3>Data</h3>
 
-Los shapes usados para este trabajo fueron obtenidos del  <a href="http://www.yunhaiwang.org/public_html/ssl/ssd.htm">repositorio</a>  indicado por los autores en el articulo.  
+Los shapes usados para este trabajo fueron obtenidos del  <a href="http://www.yunhaiwang.org/public_html/ssl/ssd.htm">repositorio</a>  indicado por los autores en el articulo donde la mayoria de shapes ya se encuentran segmentados.
+
+<h1>Implementación</h1>
+
+En este trabajo se desarrolló la implementación de la exploración y edición guiada de shapes mediante el uso de la meterepresentacion , como lo muestra la demo del artículo en su página.
+
+Como señalan los autores es necesario construir un conjunto de relaciones unitarias y binarias para construir la meta-representacion , para la implementacion se construyó las relaciones de EXTENTS (unitarias) , SCALES y ANGLES (Binarias) partiendo del OBB hallado de cada shape.
+
+Posteriormente se realizo la construccion de la funcion PDF basado en el conjunto de relaciones, usando un modelo gaussiano.
+
+Para los efectos graficos de la implementacion se uso THREE JS y para el desarrollo de la web se utilizó el framework DJANGO.
+
+<h3>Exploración de Shapes</h3>
+
+Una vez calculada la funcion PDF del conjunto de relaciones , se ha desarrollado una herramienta igual a la demo mostrada en la pagina del articulo , que permite la exploracion de un conjunto de shapes , en la cual se pueden explorar diferentes configuraciones de ciertas partes.
+
+Con esto se puede observar que una funcion de probabilidad basada en las configuraciones geometricas de las partes de los shapes puede exhibir multiples regiones donde la probabilidad es mayor , lo que significa que varios shapes poseen similares relaciones.
+
+En este caso la implementacion muestra un conjunto de shapes junto con su meta-representación. El usuario puede selecionar una o dos partes del shape que desee explorar. Dando click en cualquier punto de la meta-representacion causa que los shapes sean cargados y ordenados deacuerdo a la distancia del punto seleccionado. Luego con la ayuda de los botones de navegacion el usuario puede desplazarse a traves de los shapes cercanos al punto seleccionado.Esto permite al usuario explorar los shapes con similares caracteristicas.
 
 
+<img src="exploration.png">
+
+Adicionalmente si el usuario desea examinar la metarepresentacion de otras relaciones con ayuda de los botones ANGLES o SCALES ubicados en la parte inferior del shape. Para mas detalle ver el video de la demotración.
 
 
-
-
-
-
-
+<h3>Edición Guiada </h3>
 
 
