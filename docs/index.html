@@ -5,7 +5,7 @@ layout : default
 <h1>Resumen</h1>
 
 <p>	
-	El objetivo principal de este trabajo es replicar los resultados del paper <b>"Meta-representation of Shape Families"</b> realizado por Noa Fish , Melinos Averkiou , Oliver van Kaick , Olga Sorkine-Hornung , Daniel Cohen-Or y Niloy J. Mitra.
+	El objetivo principal de este trabajo es replicar los resultados del paper <a href="http://vecg.cs.ucl.ac.uk/Projects/SmartGeometry/metarep/metaRep_sigg14.html"><b>"Meta-representation of Shape Families"</b></a> realizado por Noa Fish , Melinos Averkiou , Oliver van Kaick , Olga Sorkine-Hornung , Daniel Cohen-Or y Niloy J. Mitra.
 </p>
 
 <p>	
@@ -64,7 +64,7 @@ La presentacion puede ser descargada del siguiente <a href="#">enlace</a>
 </p>
 
 <p>
-	Para los efectos graficos de la implementacion se uso THREE JS y para el desarrollo de la web se utilizó el framework DJANGO.
+	Para los graficos en la implementación se usó la libreria <a href="https://threejs.org/">three.js</a>  y para el desarrollo de la interfaz web se utilizó el framework 	<a href="https://www.djangoproject.com/"></a>Django.
 </p>
 
 <h3>Exploración de Shapes</h3>
@@ -89,6 +89,17 @@ La presentacion puede ser descargada del siguiente <a href="#">enlace</a>
 
 <h3>Edición Guiada </h3>
 
+<p>
+	Como los autores mencionan la edicion de un shape puede ser una tarea en varios sentidos geometricos. En tal sentido se hace uso de la meta-representacion como una facilitador de esta tarea. La herramienta desarrollada permite editar un shape para crear uno cuyas configuracion de las partes son similares al original.
+</p>
+
+<p>
+	Basado en la formulación matemática y solucion progresiva de la edición guiada señalada por el autor se desarrollo una herramienta interactiva donde el usuario puede escalar una parte del shape , creando así una variación de dicho shape. Primero una vez que la accion es registrada en la interfaz , se consulta la meta-repŕesentación para restaurar la validación del shape deformado.
+</p>
+
+<p>
+	<img src="editing.png">
+</p>
 
 
 
