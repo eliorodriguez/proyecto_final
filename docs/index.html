@@ -13,30 +13,27 @@ En este trabajo los autores introducen una meta-representacion que represente la
 
 <h2>Meta-representación</h2>
 
-El objetivo de la meta-representacion es capturar la esencia de un especifica familia de formas en terminos de las relaciones geometricas entre sus partes. Por esto como mencionan los autores es natural representar la metarepresentacion como un modelo probabilistico de las relaciones. Estas relaciones geometricas son clasificadas por los autores como unitarias y binarias  , definidas como :
+El objetivo de la meta-representacion es capturar la esencia de un especifica familia de formas en terminos de las relaciones geometricas entre sus partes. Por esto como mencionan los autores es natural representar la metarepresentacion como un modelo probabilistico de las relaciones. Estas relaciones geometricas son clasificadas por los autores como unitarias (EXTENTS) y binarias (SCALES , ANGLES , CONTACTS) , definidas por los autores en las ecuaciones 3 y 4 del artículo. 
 
-<img src="unitaria_relation.png">
-
-<img src="binaria_relations.png">
 
 Una vez obtenido el conjunto de relaciones entre las partes de cada forma de la familia de shapes , se procede a construir el modelo probabilistico representado por un Kernel Density Estimator (KDE) como los autores lo mencionan en la ecuacion (5) del articulo.
 
 <img src="kde.png">
 
-Donde los autores definen el bandwidth h como :
 
-<img src="bandwidth.png" style="width: 100%">
-
-donde p95 y p5 son los percentiles 95 y 5 respectivamente del conjunto de datos , y sigma tiene una valor de 0.05 hallado experimentalmente por el autor.
+Mas detalles de las ecuaciones pueden ser revisadas en el artículo.
 
 
 <h1>Implementación</h1>
 
-En este trabajo se desarrolló la implementación de la exploración y edición guiada de shapes mediante el uso de la meterepresentacion.
+En este trabajo se desarrolló la implementación de la exploración y edición guiada de shapes mediante el uso de la meterepresentacion , como lo muestra la demo del artículo en su página.
+
 
 <h3>Data</h3>
 
 Los shapes usados para este trabajo fueron obtenidos del  <a href="http://www.yunhaiwang.org/public_html/ssl/ssd.htm">repositorio</a>  indicado por los autores en el articulo.  
+
+
 
 
 
