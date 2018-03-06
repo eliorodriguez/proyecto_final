@@ -1,0 +1,9 @@
+<<<<<<< HEAD
+**/*.pyc
+**.pyc
+**/.DS_store
+exploration/migration/s*.pyc
+=======
+*.pyc
+.DS_store
+>>>>>>> ec4d96cf237444a555f480811bed5698f0fd8330

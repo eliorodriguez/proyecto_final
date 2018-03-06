@@ -1,0 +1,652 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Editing</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}">
+		<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" >
+
+		<style type="text/css">
+			
+		</style>
+
+	</head>
+	<body>
+		<!-- <canvas id="canvas" style="height: 100% ; width: 100% " > </canvas> -->
+		<div class="container">
+            <div class="row">
+                <h3 style=" text-align: center">Meta-representation of Shape Families</h3>
+            </div>
+            <div class="row" style=" margin-top: 30px">
+            	
+                <div class="col-md-4">
+                	<div class="row" style="text-align: center">
+	                	<h4>Original</h4>                		
+                	</div>
+                    <canvas id="canvas_original" style="height: 500px ; width: 100% " > </canvas>
+                </div>
+                <div class="col-md-4"  >
+                	<div class="row" style="text-align: center">
+	                	<h4>Edited</h4>                		
+                	</div>
+                    <canvas id="canvas_editing" style="height: 500px ; width: 100% " > </canvas>
+                </div><!--/row-->
+                <div class="col-md-2"  >
+                    <div class="row" style="text-align: center">
+	                	<h4>Guided Editing</h4>          		
+                	</div>
+                    <div class="row">
+	                   	<form method="POST" class="form-horizontal" >
+							{% csrf_token %} 
+							
+							<div class="radio">
+							  <label>
+							    <input type="radio" name="optionsRadios" id="translate" value="option1" >
+							    Translate
+							  </label>
+							</div>
+							<div class="radio">
+							  <label>
+							    <input type="radio" name="optionsRadios" id="rotate" value="option2">
+							    Rotation
+							  </label>
+							</div>
+							<div class="radio">
+							  <label>
+							    <input type="radio" name="optionsRadios" id="scale" value="option3" checked>
+							    Scale
+							  </label>
+							</div>
+
+						  <div class="form-group">
+						    <div class="col-sm-12">
+						      <input type="hidden" name="x" id="x" >
+						      <input type="hidden" name="y" id="y" >
+						      <input type="hidden" name="label" id="label" >
+						      <button type="submit" class="btn btn-default" style="width: 100%;margin-top: 10px">Optimise edit</button>
+						    </div>
+						  </div>
+						</form>
+                    </div>
+
+                </div><!--/row-->
+            </div><!--/.col-xs-12.col-sm-9-->
+        </div><!--/.container-->
+	</body>
+</html>
+
+
+<script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script> -->
+<!-- <script type="text/javascript" src="{% static 'js/plotly-latest.min.js' %}"></script> -->
+<script type="text/javascript" src="{% static 'js/canvasjs-2.0/canvasjs.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'js/three.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/OBJLoader.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/LoaderSupport.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/OBJLoader2.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/TrackballControls.js' %}"></script>
+
+
+
+<script>
+	(function(){
+
+
+	var canvas  ;
+	var camera, scene, renderer , boxes , controls;
+	//var windowHalfX = window.innerWidth / 2;
+	//var windowHalfY = window.innerHeight / 2;
+	var mouse = new THREE.Vector2() ;
+	var object = new THREE.Object3D();
+	var raycaster = new THREE.Raycaster();
+	var parts =  {{ parts | safe  }}
+	//var label1 = $(".label1").val() , label2 = $(".label2").val();
+	var draw_OBB = true;
+	var selection  ;
+	var start_position , end_position ;
+	
+	init();
+	animate();
+
+
+	function init() {
+		//document.getElementById("object").appendChild( container );
+		canvas = document.getElementById("canvas_original");
+		//camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+		camera = new THREE.PerspectiveCamera( 45, canvas.clientWidth / canvas.clientHeight , 1, 2000 );
+		camera.position.z = 20;
+
+		controls = new THREE.TrackballControls( camera , canvas );
+		controls.noRotate = true;
+		controls.noPan = true;
+		// scene
+		scene = new THREE.Scene();
+		boxes = [];
+		var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
+		scene.add( ambientLight );
+		var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
+		camera.add( pointLight );
+		scene.add( camera );
+		
+
+		// var geometry = new THREE.CircleGeometry( 1, 32 );
+		// var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+		// var circle = new THREE.Mesh( geometry, material );
+		//scene.add( circle );
+
+
+		// texture
+		var manager = new THREE.LoadingManager();
+		manager.onProgress = function ( item, loaded, total ) {
+			console.log( item, loaded, total );
+		};
+		var textureLoader = new THREE.TextureLoader( manager );
+		var texture = textureLoader.load( '../static/textures/UV_Grid_Sm.jpg' );
+		var callbackOnLoad = function ( event ) {
+			//index = parseInt(event.detail.modelName);
+			var name = event.detail.modelName
+			var part = event.detail.loaderRootNode.children[0];
+			part.name = name;
+			
+			// part.geometry.computeBoundingBox();   
+		 //    center = part.geometry.boundingBox.getCenter();
+			// console.log(center);
+			//part.geometry.center()
+			//part.geometry.normalize();
+			//part.position.set(0,0,15);
+			//part.translateX(-80);
+			//part.translateY(-5);
+			//part.scale.set(5,5,5);
+			//part.rotateY( -1.5708 );//45 1.5708
+			if( name == "{{ label1 }}"){
+				part.material.color.setHex(0x12A51B);
+			}
+			if( name == "{{ label2 }}" ){
+				part.material.color.setHex(0x0D1CF0);
+			
+			}
+			object.add(part);
+		};
+
+		for (var i = 0 ; i < parts.length; i++ ) {
+			//console.log(parts[i].path);
+			var loader = new THREE.OBJLoader2();
+			loader.modelName = parts[i].label ;
+			loader.load(  '../static/objects/'+parts[i].path , callbackOnLoad, null, null, null, false );
+		}
+
+		// var id = "118"
+		// 		var loader = new THREE.OBJLoader2();
+		// loader.modelName = "3" ;
+		// loader.load(  '../static/objects/chairs/'+id+'/1.obj' , callbackOnLoad, null, null, null, false );
+
+		// 		var loader = new THREE.OBJLoader2();
+		// loader.modelName = "2" ;
+		// loader.load(  '../static/objects/chairs/'+id+'/2.obj' , callbackOnLoad, null, null, null, false );
+
+		// 		var loader = new THREE.OBJLoader2();
+		// loader.modelName = "1" ;
+		// loader.load(  '../static/objects/chairs/'+id+'/3.obj' , callbackOnLoad, null, null, null, false );
+
+		// 		var loader = new THREE.OBJLoader2();
+		// loader.modelName = "1" ;
+		// loader.load(  '../static/objects/chairs/'+id+'/4.obj' , callbackOnLoad, null, null, null, false );
+
+		// 		var loader = new THREE.OBJLoader2();
+		// loader.modelName = "1" ;
+		// loader.load(  '../static/objects/chairs/'+id+'/5.obj' , callbackOnLoad, null, null, null, false );
+
+		// 		var loader = new THREE.OBJLoader2();
+		// loader.modelName = "1" ;
+		// loader.load(  '../static/objects/chairs/'+id+'/6.obj' , callbackOnLoad, null, null, null, false );
+
+
+		scene.add(object);
+
+		//
+		renderer = new THREE.WebGLRenderer({canvas:canvas});
+		renderer.setPixelRatio( canvas.devicePixelRatio );
+		renderer.setSize( canvas.clientWidth , canvas.clientHeight );
+		//container.appendChild( renderer.domElement );
+		//canvas.addEventListener( 'mousemove', onMouseMove, false );
+		// canvas.addEventListener( 'click', onClick, false );
+	 //  	canvas.addEventListener('mousedown', onMouseDown, false);
+	 //    //canvas.addEventListener('mousemove', onMouseMove, false);
+	 //    canvas.addEventListener('mouseup', onMouseUp, false);
+	 //    //canvas.addEventListener('wheel', mouseWheel , false);
+
+		// //
+		// window.addEventListener( 'resize', onWindowResize, false );
+
+	}
+
+	function onMouseDown(event){
+		event.preventDefault();
+		console.log("mouse down");
+		canvasPosition = canvas.getBoundingClientRect();
+		mouse.x = ((event.clientX - canvasPosition.left) / canvas.clientWidth) * 2 - 1;
+		mouse.y = -((event.clientY - canvasPosition.top) / canvas.clientHeight) * 2 + 1;
+		start_position = new THREE.Vector2(mouse.x , mouse.y);
+		raycaster.setFromCamera( mouse, camera );
+		var intersects = raycaster.intersectObjects( object.children , true );
+		if (intersects.length ){
+			selection = intersects[0].object
+			//console.log(intersects[ 0].object.name);
+		}
+
+	}
+
+	// function onMouseMove(event){
+	// 	event.preventDefault();
+	// 	console.log("mouse move");
+	// }
+
+	// function onMouseUp(event){
+	// 	event.preventDefault();
+	// 	console.log("mouse up");
+
+	// 	if( selection ){
+	// 		canvasPosition = canvas.getBoundingClientRect();
+	// 		mouse.x = ((event.clientX - canvasPosition.left) / canvas.clientWidth) * 2 - 1;
+	// 		mouse.y = -((event.clientY - canvasPosition.top) / canvas.clientHeight) * 2 + 1;
+	// 		end_position = new THREE.Vector2(mouse.x , mouse.y);
+	// 		var distance = end_position.sub(start_position);
+	// 		console.log(distance);
+	// 		selection.scale.x += distance.x;
+	// 		selection.scale.y += distance.y;
+	// 		selection = null;
+	// 	}
+
+	// }
+
+	// function mouseWheel(event) {
+	// 	event.preventDefault();
+	// 	console.log(event.deltaY * 0.00025);
+	// }
+
+	// function getDiagonal(vector){
+	// 	return Math.pow(Math.pow(vector.x,2)+Math.pow(vector.y, 2)+Math.pow(vector.z, 2),0.5);
+	// }
+
+	// function drawOBB(object){
+	// 	for(var i = 0 ; i < object.children.length ; i ++){
+	// 		var box = new THREE.Box3();
+	// 		box.setFromObject(object.children[i]);
+	// 		var helper = new THREE.Box3Helper( box, 0xffff00 );
+	// 		scene.add( helper );
+	// 		var size = box.getSize();
+	// 		$("#part_information").append('<div class="form-group" id="">'+
+	// 									'<input type="text" name="labels[]" style= "width:25%" class="form-control" id="" value= "'+object.children[i].name+'" >'+
+	// 									'<input type="text" name="x[]" style= "width:25%" class="form-control" id="" value= " '+size.x+'" >'+
+	// 									'<input type="text" name="y[]" style= "width:25%" class="form-control" id="" value= " '+size.y+'" >'+
+	// 									'<input type="text" name="z[]" style= "width:25%" class="form-control" id="" value= " '+size.z+'" >'+
+	// 							'</div>');
+
+	// 	}
+	// 	var box = new THREE.Box3();
+	// 	box.setFromObject(object);
+	// 	var helper = new THREE.Box3Helper( box, 0xffff00 );
+	// 	scene.add( helper );
+	// 	$("#shape_size").val(getDiagonal(box.getSize()));
+	// }
+
+	function onWindowResize() {
+		// windowHalfX = window.innerWidth / 2;
+		// windowHalfY = window.innerHeight / 2;
+		//camera.aspect = window.innerWidth / window.innerHeight;
+		camera.aspect = canvas.clientWidth / canvas.clientHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( canvas.clientWidth , canvas.clientHeight );
+	}
+	
+	// function onClick( event ) {
+
+	// 	canvasPosition = canvas.getBoundingClientRect();
+	// 	mouse.x = ((event.clientX - canvasPosition.left) / canvas.clientWidth) * 2 - 1;
+	// 	mouse.y = -((event.clientY - canvasPosition.top) / canvas.clientHeight) * 2 + 1;
+	// 	raycaster.setFromCamera( mouse, camera );
+	// 	// calculate objects intersecting the picking ray
+	// 	var intersects = raycaster.intersectObjects( object.children , true );
+	// 	//console.log(intersects)
+	// 	for ( var i = 0; i < intersects.length; i++ ) {
+	// 		if(label1 != "" && label2 != ""){
+	// 			label1 = "" ;
+	// 			label2 = "" ;
+	// 		}
+	// 		if( label1 == "" ){
+	// 			label1 = intersects[ i ].object.name;
+	// 		}else if(label2 == "" ){
+	// 			label2 = intersects[ i ].object.name;
+	// 		}
+	// 		if($(".label1").val() && $(".label2").val() ){
+	// 				$(".label1").val("");
+	// 				$(".label2").val("");
+	// 		}
+	// 		if(!$(".label1").val()) {
+	// 				$(".label1").val(label1);
+	// 		}else if (!$(".label2").val()) {
+	// 				$(".label2").val(label2);
+	// 		}
+	// 		// change color
+	// 		var defaultHex =  14479871; //intersects[i].object.material.color.getHex();
+		
+	// 		for(var j = 0; j < object.children.length; j++ ){
+	// 			//console.log(object.children[j])
+	// 			if(object.children[j].name == label1 ){
+	// 				object.children[j].material.color.setHex(0x12A51B);
+	// 			}
+	// 			else if(object.children[j].name == label2){
+	// 				object.children[j].material.color.setHex(0x0D1CF0);
+	// 			}else{
+	// 				object.children[j].material.color.setHex(defaultHex);
+	// 			}
+	// 			//console.log(label);
+	// 		}
+	// 		if(draw_OBB){
+	// 			draw_OBB = false;
+	// 			drawOBB(object);
+	// 		}
+
+
+	// 	}
+
+	// }
+	//
+	function animate() {
+		requestAnimationFrame( animate );
+		render();
+
+	}
+	function render() {
+		controls.update();
+		renderer.render( scene, camera );
+	}
+
+
+	})();
+</script>
+
+
+<script>
+	var canvas  ;
+	var camera, scene, renderer , boxes , controls;
+	//var windowHalfX = window.innerWidth / 2;
+	//var windowHalfY = window.innerHeight / 2;
+	var mouse = new THREE.Vector2() ;
+	var object = new THREE.Object3D();
+	var raycaster = new THREE.Raycaster();
+	var parts =  {{ parts | safe  }}
+	var draw_OBB = true;
+	var selection  ;
+	var start_position , end_position ;
+	var defaultHex = 14479871;
+	var scales = {{ scales | safe }}
+	init();
+	animate();
+
+
+	function init() {
+		//document.getElementById("object").appendChild( container );
+		canvas = document.getElementById("canvas_editing");
+		//camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+		camera = new THREE.PerspectiveCamera( 45, canvas.clientWidth / canvas.clientHeight , 1, 2000 );
+		camera.position.z = 20;
+
+		controls = new THREE.TrackballControls( camera , canvas );
+		controls.noRotate = true;
+		controls.noPan = true;
+		// scene
+		scene = new THREE.Scene();
+		boxes = [];
+		var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
+		scene.add( ambientLight );
+		var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
+		camera.add( pointLight );
+		scene.add( camera );
+		
+
+		// var geometry = new THREE.CircleGeometry( 1, 32 );
+		// var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+		// var circle = new THREE.Mesh( geometry, material );
+		//scene.add( circle );
+
+
+		// texture
+		var manager = new THREE.LoadingManager();
+		manager.onProgress = function ( item, loaded, total ) {
+			console.log( item, loaded, total );
+		};
+		var textureLoader = new THREE.TextureLoader( manager );
+		var texture = textureLoader.load( '../static/textures/UV_Grid_Sm.jpg' );
+		var callbackOnLoad = function ( event ) {
+			//index = parseInt(event.detail.modelName);
+			var name = event.detail.modelName
+			var part = event.detail.loaderRootNode.children[0];
+			part.name = name;
+			console.log(scales);
+			if(scales[name]) {
+				part.scale.x += parseFloat(scales[name])
+			}
+			// if(name == "2") {
+			// 	console.log(scales[name]);
+			// 	part.scale.x += l[2];
+			// }
+			// part.geometry.computeBoundingBox();   
+		 //    center = part.geometry.boundingBox.getCenter();
+			// console.log(center);
+			//part.geometry.center()
+			//part.geometry.normalize();
+			//part.position.set(0,0,15);
+			//part.translateX(-80);
+			//part.translateY(-5);
+			//part.scale.set(5,5,5);
+			//part.rotateY( -1.5708 );//45 1.5708
+			//part.rotation.set(0, Math.PI/2, 0); // Set initial rotation
+			//part.matrix.makeRotationFromEuler(part.rotation); // Apply rotation to the object's matrix
+
+			if( name == "{{ label1 }}"){
+				part.material.color.setHex(0x12A51B);
+			}
+			if( name == "{{ label2 }}" ){
+				part.material.color.setHex(0x0D1CF0);
+			
+			}
+			object.add(part);
+		};
+
+		for (var i = 0 ; i < parts.length; i++ ) {
+			//console.log(parts[i].path);
+			var loader = new THREE.OBJLoader2();
+			loader.modelName = parts[i].label ;
+			loader.load(  '../static/objects/'+parts[i].path , callbackOnLoad, null, null, null, false );
+		}
+
+		// var id = "118"
+		// 		var loader = new THREE.OBJLoader2();
+		// loader.modelName = "3" ;
+		// loader.load(  '../static/objects/chairs/'+id+'/1.obj' , callbackOnLoad, null, null, null, false );
+
+		// 		var loader = new THREE.OBJLoader2();
+		// loader.modelName = "2" ;
+		// loader.load(  '../static/objects/chairs/'+id+'/2.obj' , callbackOnLoad, null, null, null, false );
+
+		// 		var loader = new THREE.OBJLoader2();
+		// loader.modelName = "1" ;
+		// loader.load(  '../static/objects/chairs/'+id+'/3.obj' , callbackOnLoad, null, null, null, false );
+
+		// 		var loader = new THREE.OBJLoader2();
+		// loader.modelName = "1" ;
+		// loader.load(  '../static/objects/chairs/'+id+'/4.obj' , callbackOnLoad, null, null, null, false );
+
+		// 		var loader = new THREE.OBJLoader2();
+		// loader.modelName = "1" ;
+		// loader.load(  '../static/objects/chairs/'+id+'/5.obj' , callbackOnLoad, null, null, null, false );
+
+		// 		var loader = new THREE.OBJLoader2();
+		// loader.modelName = "1" ;
+		// loader.load(  '../static/objects/chairs/'+id+'/6.obj' , callbackOnLoad, null, null, null, false );
+
+
+		scene.add(object);
+
+		//
+		renderer = new THREE.WebGLRenderer({canvas:canvas});
+		renderer.setPixelRatio( canvas.devicePixelRatio );
+		renderer.setSize( canvas.clientWidth , canvas.clientHeight );
+		//container.appendChild( renderer.domElement );
+		//canvas.addEventListener( 'mousemove', onMouseMove, false );
+		canvas.addEventListener( 'click', onClick, false );
+	  	canvas.addEventListener('mousedown', onMouseDown, false);
+	    //canvas.addEventListener('mousemove', onMouseMove, false);
+	    canvas.addEventListener('mouseup', onMouseUp, false);
+	    //canvas.addEventListener('wheel', mouseWheel , false);
+
+		//
+		window.addEventListener( 'resize', onWindowResize, false );
+
+	}
+
+	function onMouseDown(event){
+		event.preventDefault();
+		console.log("mouse down");
+		canvasPosition = canvas.getBoundingClientRect();
+		mouse.x = ((event.clientX - canvasPosition.left) / canvas.clientWidth) * 2 - 1;
+		mouse.y = -((event.clientY - canvasPosition.top) / canvas.clientHeight) * 2 + 1;
+		start_position = new THREE.Vector2(mouse.x , mouse.y);
+		raycaster.setFromCamera( mouse, camera );
+		var intersects = raycaster.intersectObjects( object.children , true );
+		if (intersects.length ){
+			selection = intersects[0].object
+			//console.log(intersects[ 0].object.name);
+		}
+
+	}
+
+	function onMouseMove(event){
+		event.preventDefault();
+		console.log("mouse move");
+	}
+
+	function onMouseUp(event){
+		event.preventDefault();
+		console.log("mouse up");
+		if( selection ){
+
+			canvasPosition = canvas.getBoundingClientRect();
+			mouse.x = ((event.clientX - canvasPosition.left) / canvas.clientWidth) * 2 - 1;
+			mouse.y = -((event.clientY - canvasPosition.top) / canvas.clientHeight) * 2 + 1;
+			end_position = new THREE.Vector2(mouse.x , mouse.y);
+			if($('#scale').is(':checked')) { 
+
+				var distance = end_position.sub(start_position);
+				selection.scale.x += distance.x;
+				selection.scale.y += distance.y;
+				
+				$("#label").val(selection.name);
+				$("#x").val(distance.x);
+				$("#y").val(distance.y);
+				//object.scale.x += distance.x;
+				//object.scale.y += distance.y;
+				selection = null;
+				
+			}else if($('#translate').is(':checked')){
+			
+				var direction = end_position.sub(start_position);
+				selection.translateX(direction.x);
+				selection.translateY(direction.y);
+				selection = null;
+
+			}else if($('#rotate').is(':checked')){
+				//var direction = end_position.sub(start_position);
+				selection.rotateZ( 0.1 );
+				//selection.translateY(direction.y);
+				selection = null;
+			}
+		}
+
+	}
+
+	function mouseWheel(event) {
+		event.preventDefault();
+		console.log(event.deltaY * 0.00025);
+	}
+
+	function getDiagonal(vector){
+		return Math.pow(Math.pow(vector.x,2)+Math.pow(vector.y, 2)+Math.pow(vector.z, 2),0.5);
+	}
+
+	// function drawOBB(object){
+	// 	for(var i = 0 ; i < object.children.length ; i ++){
+	// 		var box = new THREE.Box3();
+	// 		box.setFromObject(object.children[i]);
+	// 		var helper = new THREE.Box3Helper( box, 0xffff00 );
+	// 		scene.add( helper );
+	// 		var size = box.getSize();
+	// 		$("#part_information").append('<div class="form-group" id="">'+
+	// 									'<input type="text" name="labels[]" style= "width:25%" class="form-control" id="" value= "'+object.children[i].name+'" >'+
+	// 									'<input type="text" name="x[]" style= "width:25%" class="form-control" id="" value= " '+size.x+'" >'+
+	// 									'<input type="text" name="y[]" style= "width:25%" class="form-control" id="" value= " '+size.y+'" >'+
+	// 									'<input type="text" name="z[]" style= "width:25%" class="form-control" id="" value= " '+size.z+'" >'+
+	// 							'</div>');
+
+	// 	}
+	// 	var box = new THREE.Box3();
+	// 	box.setFromObject(object);
+	// 	var helper = new THREE.Box3Helper( box, 0xffff00 );
+	// 	scene.add( helper );
+	// 	$("#shape_size").val(getDiagonal(box.getSize()));
+	// }
+
+	function onWindowResize() {
+		// windowHalfX = window.innerWidth / 2;
+		// windowHalfY = window.innerHeight / 2;
+		//camera.aspect = window.innerWidth / window.innerHeight;
+		camera.aspect = canvas.clientWidth / canvas.clientHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( canvas.clientWidth , canvas.clientHeight );
+	}
+	
+	function onClick( event ) {
+
+		canvasPosition = canvas.getBoundingClientRect();
+		mouse.x = ((event.clientX - canvasPosition.left) / canvas.clientWidth) * 2 - 1;
+		mouse.y = -((event.clientY - canvasPosition.top) / canvas.clientHeight) * 2 + 1;
+		raycaster.setFromCamera( mouse, camera );
+		// calculate objects intersecting the picking ray
+		var intersects = raycaster.intersectObjects( object.children , true );
+		//console.log(intersects)
+		
+		for ( var i = 0; i < intersects.length; i++ ) {
+			var name = intersects[i].object.name ;
+			//intersects[i].object.material.color.setHex(0x12A51B);
+			
+			for(var j = 0; j < object.children.length; j++ ){
+				//console.log(object.children[j])
+				if(object.children[j].name == name ){
+					object.children[j].material.color.setHex(0x12A51B);
+			
+				}else{
+					object.children[j].material.color.setHex(defaultHex);
+				}
+				//console.log(label);
+			}
+
+		}
+
+	}
+	//
+	function animate() {
+		requestAnimationFrame( animate );
+		render();
+
+	}
+	function render() {
+		controls.update();
+		renderer.render( scene, camera );
+	}
+</script>
+
+
