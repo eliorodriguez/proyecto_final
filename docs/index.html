@@ -9,7 +9,7 @@ layout : default
 </p>
 
 <p>	
-	En este trabajo los autores introducen una meta-representacion que represente la esencia de una familia de shapes o formas especificas. Esta representacion es diseñada a partir de las relaciones geometricas que contienen las figuras. Esta representacion es construida a partir de shapes co-segmentados. Los autores proponen 3 usos importantes de la metarepresentacion , la exploracion , la edicion guiada y la edicion acoplada o en masa de los shapes. Como proyecto final del curso de Graficos se realizó la implementación de la exploración y edición guiada de los shapes o formas usando la meta-representacion descrita por los autores del artículo.
+	En este trabajo los autores introducen una meta-representación que represente la esencia de una familia de shapes o formas específicas. Esta representación es diseñada a partir de las relaciones geométricas que contienen las figuras. Esta representación es construida a partir de shapes co-segmentados. Los autores proponen 3 usos importantes de la metarepresentación , la exploración , la edicion guiada y la edicion acoplada o en masa de los shapes. Como proyecto final del curso de Graficos se realizó la implementación de la exploración y edición guiada de los shapes o formas usando la meta-representación descrita por los autores del artículo.
 </p>
 
 <h1>Video</h1>
@@ -18,13 +18,13 @@ layout : default
 
 <h3>Presentacion</h3>
 
-La presentacion puede ser descargada del siguiente <a href="http://github.com/eliorodriguez/proyecto_final/raw/master/presentacion-final.pdf">enlace</a>
+La presentación puede ser descargada del siguiente <a href="http://github.com/eliorodriguez/proyecto_final/raw/master/presentacion-final.pdf">enlace</a>
 
 
 <h2>Meta-representación</h2>
 
 <p>
-	El objetivo de la meta-representacion es capturar la esencia de un especifica familia de shapes en terminos de las relaciones geometricas entre sus partes. Por esto como mencionan los autores es natural representar la metarepresentacion como un modelo probabilistico de las relaciones. Estas relaciones geometricas son clasificadas por los autores como unitarias (EXTENTS) y binarias (SCALES , ANGLES , CONTACTS) , definidas por los autores en las ecuaciones 3 y 4 del artículo. 
+	El objetivo de la meta-representación es capturar la esencia de un especifica familia de shapes en terminos de las relaciones geometricas entre sus partes. Por esto como mencionan los autores es natural representar la metarepresentación como un modelo probabilistico de las relaciones. Estas relaciones geometricas son clasificadas por los autores como unitarias (EXTENTS) y binarias (SCALES , ANGLES , CONTACTS) , definidas por los autores en las ecuaciones 3 y 4 del artículo. 
 </p>
 
 <p>
@@ -51,16 +51,16 @@ La presentacion puede ser descargada del siguiente <a href="http://github.com/el
 <h1>Implementación</h1>
 
 <p>	
-	En este trabajo se desarrolló la implementación de la exploración y edición guiada de shapes mediante el uso de la meterepresentacion , como lo muestra la demo del artículo en su página.
+	En este trabajo se desarrolló la implementación de la exploración y edición guiada de shapes mediante el uso de la meterepresentación , como lo muestra la demo del artículo en su página.
 </p>
 
 <p>
-	Como señalan los autores es necesario construir un conjunto de relaciones unitarias y binarias para construir la meta-representacion , para la implementacion se construyó las relaciones de EXTENTS (unitarias) , SCALES y ANGLES (Binarias) partiendo del OBB hallado de cada shape.
+	Como señalan los autores es necesario construir un conjunto de relaciones unitarias y binarias para construir la meta-representación , para la implementacion se construyó las relaciones de EXTENTS (unitarias) , SCALES y ANGLES (Binarias) partiendo del OBB hallado de cada shape.
 </p>
 
 
 <p>
-	Posteriormente se realizo la construccion de la funcion PDF basado en el conjunto de relaciones, usando un modelo gaussiano.	
+	Posteriormente se realizó la construccion de la funcion PDF basado en el conjunto de relaciones, usando un modelo gaussiano.	
 </p>
 
 <p>
@@ -70,34 +70,34 @@ La presentacion puede ser descargada del siguiente <a href="http://github.com/el
 <h3>Exploración de Shapes</h3>
 
 <p>
-	Una vez calculada la funcion PDF del conjunto de relaciones , se ha desarrollado una herramienta igual a la demo mostrada en la pagina del articulo , que permite la exploracion de un conjunto de shapes , en la cual se pueden explorar diferentes configuraciones de ciertas partes.
+	Una vez calculada la funcion PDF del conjunto de relaciones , se ha desarrollado una herramienta igual a la demo mostrada en la página del artículo , que permite la exploración de un conjunto de shapes , en la cual se pueden explorar diferentes configuraciones de ciertas partes.
 
-	Con esto se puede observar que una funcion de probabilidad basada en las configuraciones geometricas de las partes de los shapes puede exhibir multiples regiones donde la probabilidad es mayor , lo que significa que varios shapes poseen similares relaciones.
+	Con esto se puede observar que una funcion de probabilidad basada en las configuraciones geométricas de las partes de los shapes puede exhibir multiples regiones donde la probabilidad es mayor , lo que significa que varios shapes poseen similares relaciones.
 
-	En este caso la implementacion muestra un conjunto de shapes junto con su meta-representación. El usuario puede selecionar una o dos partes del shape que desee explorar. Dando click en cualquier punto de la meta-representacion causa que los shapes sean cargados y ordenados deacuerdo a la distancia del punto seleccionado. Luego con la ayuda de los botones de navegacion el usuario puede desplazarse a traves de los shapes cercanos al punto seleccionado. Esto permite al usuario explorar los shapes con similares caracteristicas.
+	En este caso la implementación muestra un conjunto de shapes junto con su meta-representación. El usuario puede selecionar una o dos partes del shape que desee explorar. Dando clic en cualquier punto de la meta-representación causa que los shapes sean cargados y ordenados deacuerdo a la distancia del punto seleccionado. Luego con la ayuda de los botones de navegación el usuario puede desplazarse a través de los shapes cercanos al punto seleccionado. Esto permite al usuario explorar los shapes con similares caracteristicas.
 </p>
 
 <p>
 	<figure>
 		<img src="exploration.png">
-	  	<figcaption>Figura 1 : Exploracion de shapes </figcaption>
+	  	<figcaption>Figura 1 : Exploración de shapes </figcaption>
 	</figure> 
 </p>
 
 <p>
 	
-	Adicionalmente el usuario puede examinar la metarepresentacion de otras relaciones con ayuda de los botones ANGLES o SCALES ubicados en la parte inferior del shape. Para mas detalle ver el video de la demotración.
+	Adicionalmente el usuario puede examinar la metarepresentación de otras relaciones con ayuda de los botones ANGLES o SCALES ubicados en la parte inferior del shape. Para mas detalle ver el video de la demotración.
 
 </p>
 
 <h3>Edición Guiada </h3>
 
 <p>
-	Como los autores mencionan la edicion de un shape puede ser una tarea en varios sentidos geometricos. En tal sentido se hace uso de la meta-representacion como una facilitador de esta tarea. La herramienta desarrollada permite editar un shape para crear uno cuyas configuracion de las partes son similares al original.
+	Como los autores mencionan la edición de un shape puede ser una tarea en varios sentidos geométricos. En tal sentido se hace uso de la meta-representación como una facilitador de esta tarea. La herramienta desarrollada permite editar un shape para crear uno cuyas configuración de las partes son similares al original.
 </p>
 
 <p>
-	Basado en la formulación matemática y solucion progresiva de la edición guiada señalada por el autor se desarrollo una herramienta interactiva donde el usuario puede escalar una parte del shape , creando así una variación de dicho shape. Primero una vez que la accion es registrada en la interfaz , se consulta la meta-representación para restaurar la validación del shape deformado.Para mas detalle ver el video de la demotración.
+	Basado en la formulación matemática y solución progresiva de la edición guiada señalada por los autores se desarrolló una herramienta interactiva donde el usuario puede escalar una parte del shape , creando así una variación de dicho shape. Primero una vez que la accion es registrada en la interfaz , se consulta la meta-representación para restaurar la validación del shape deformado. Para más detalle ver el video de la demostración.
 </p>
 
 <p>
@@ -110,18 +110,18 @@ La presentacion puede ser descargada del siguiente <a href="http://github.com/el
 <h1>Discusiones y Resultados</h1>
 	
 <p>
-	En el video de demostración podemos apreciar varios ejemplos de exploracion de shapes , muy similares al de los autores , en la figura 1 podemos apreciar por ejemplo la relacion EXTENT de la familia de sillas , la cual podemos ver sólo un pico en la distribución indicando que las patas de las sillas mantienen una relacion de entre 0 y 0.2 en relacion al tamaño completo del shape. En la figura 2 podemos apreciar que la distribucion para el angulo formado entre el respaldar de la silla y el asiento tiene dos picos bien definidos. Con esto el usuario puede ver las agrupaciones de los shapes por simple inspeccion.
+	En el video de demostración podemos apreciar varios ejemplos de exploración de shapes , muy similares al de los autores , en la figura 1 podemos apreciar por ejemplo la relación EXTENT de la familia de sillas , la cual podemos ver sólo un pico en la distribución indicando que las patas de las sillas mantienen una relacion de entre 0 y 0.2 en relacion al tamaño completo del shape. En la figura 2 podemos apreciar que la distribución para el angulo formado entre el respaldar de la silla y el asiento tiene dos picos bien definidos. Con esto el usuario puede ver las agrupaciones de los shapes por simple inspección.
 </p>
 
 <p>
 	<figure>
 		<img src="angle_relation.png">
-	  	<figcaption>Figura 3 : Meta-representacion para la relacion ANGLE </figcaption>
+	  	<figcaption>Figura 3 : Meta-representación para la relacion ANGLE </figcaption>
 	</figure> 
 </p>
 
 <p>
-	En varios de los casos , pese a que los autores han indicado la ubicacion de su repositorio de sus datos , no se han encontrado varios de los shapes que se aprecian en el articulo. Ocasionando esto una diferencia en las medidas de las relaciones geometricas , lo que a su ves hace variar la distribucion. Otro factor es la seleccion del bandwidth para la distribucion gaussiana que realizan los autores , ya que indican un valor experiemtal sigma de 0.05 pero no indican un procedimiento de su obtención , y al haber cambiado las mediciones de las relaciones geometricas se obtienen distribuciones similares mas no identicas. Un ejemplo de esto se puede apreciar en la figura 4 y 5.
+	En varios de los casos , pese a que los autores han indicado la ubicación de su repositorio de sus datos , no se han encontrado varios de los shapes que se aprecian en el articulo. Ocasionando esto una diferencia en las medidas de las relaciones geométricas , lo que a su vez hace variar la distribución. Otro factor es la selección del bandwidth para la distribución gaussiana que realizan los autores , ya que indican un valor experimental sigma de 0.05 pero no indican un procedimiento de su obtención , y al haber cambiado las mediciones de las relaciones geométricas se obtienen distribuciones similares más no idénticas. Un ejemplo de esto se puede apreciar en la figura 4 y 5.
 </p>
 
 <p>
@@ -136,7 +136,7 @@ La presentacion puede ser descargada del siguiente <a href="http://github.com/el
 </p>
 
 <p>
-	Figuras 6-8 muestran algunos de los resultados para la Edicion Guiada utilizando la meta-representación y la progresiva solucion descrita en el articulo , algunos resultados son similares con los del artículo , mas no identicos , esto posiblemente a la diferencia encontrada en las distribuciones.
+	Figuras 6-8 muestran algunos de los resultados para la Edición Guiada utilizando la meta-representación y la progresiva solución descrita en el artículo , algunos resultados son similares con los del artículo , mas no idénticos , esto posiblemente a la diferencia encontrada en las distribuciones.
 </p>
 
 <p>
